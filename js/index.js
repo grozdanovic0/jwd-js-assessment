@@ -2,8 +2,7 @@
   JWD JavaScript Assessment
 
   This code is unfinished. You will need to study it to figure out what it does. Then you will need to use this and
-  your own code, to finish the app. 
-  
+  your own code, to finish the app.
   The tasks you need to do are below.
 
     TASKS TODO:
@@ -19,37 +18,54 @@
       5. Add a countdown timer - when the time is up, end the quiz, display the score and highlight the correct answers
 *************************** */
 
-window.addEventListener('DOMContentLoaded', () => {
-  const start = document.querySelector('#start');
-  start.addEventListener('click', function (e) {
-    document.querySelector('#quizBlock').style.display = 'block';
-    start.style.display = 'none';
+window.addEventListener("DOMContentLoaded", () => {
+  const start = document.querySelector("#start");
+  start.addEventListener("click", function (e) {
+    document.querySelector("#quizBlock").style.display = "block";
+    start.style.display = "none";
+
+    let timer = 60;
+    const interval = setInterval(function () {
+      timer -= 1;
+      document.querySelector("#time").innerText = "00:" + timer;
+    }, 1000);
   });
   // quizArray QUESTIONS & ANSWERS
   // q = QUESTION, o = OPTIONS, a = CORRECT ANSWER
   // Basic ideas from https://code-boxx.com/simple-javascript-quiz/
+
   const quizArray = [
     {
-      q: 'Which is the third planet from the sun?',
-      o: ['Saturn', 'Earth', 'Pluto', 'Mars'],
+      q: "Which is the third planet from the sun?",
+      o: ["Saturn", "Earth", "Pluto", "Mars"],
       a: 1, // array index 1 - so Earth is the correct answer here
     },
     {
-      q: 'Which is the largest ocean on Earth?',
-      o: ['Atlantic Ocean', 'Indian Ocean', 'Arctic Ocean', 'Pacific Ocean'],
+      q: "Which is the largest ocean on Earth?",
+      o: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
       a: 3,
     },
     {
-      q: 'What is the capital of Australia',
-      o: ['Sydney', 'Canberra', 'Melbourne', 'Perth'],
+      q: "What is the capital of Australia",
+      o: ["Sydney", "Canberra", "Melbourne", "Perth"],
+      a: 1,
+    },
+    {
+      q: "What is the capital of Australia",
+      o: ["Sydney", "Canberra", "Melbourne", "Perth"],
+      a: 1,
+    },
+    {
+      q: "What is the capital of Australia",
+      o: ["Sydney", "Canberra", "Melbourne", "Perth"],
       a: 1,
     },
   ];
 
   // function to Display the quiz questions and answers from the object
   const displayQuiz = () => {
-    const quizWrap = document.querySelector('#quizWrap');
-    let quizDisplay = '';
+    const quizWrap = document.querySelector("#quizWrap");
+    let quizDisplay = "";
     quizArray.map((quizItem, index) => {
       quizDisplay += `<ul class="list-group">
                    Q - ${quizItem.q}
@@ -66,25 +82,43 @@ window.addEventListener('DOMContentLoaded', () => {
   // Calculate the score
   const calculateScore = () => {
     let score = 0;
-    quizArray.map((quizItem, index) => {
-      for (let i = 0; i < 4; i++) {
+    quizArray.map((quizItem, questionIndex) => {
+      for (let optionIndex = 0; optionIndex < 4; optionIndex++) {
         //highlight the li if it is the correct answer
-        let li = `li_${index}_${i}`;
-        let r = `radio_${index}_${i}`;
-        liElement = document.querySelector('#' + li);
-        radioElement = document.querySelector('#' + r);
-
-        if (quizItem.a == i) {
+        let li = `li_${questionIndex}_${optionIndex}`;
+        let r = `radio_${questionIndex}_${optionIndex}`;
+        const liElement = document.querySelector("#" + li);
+        const radioElement = document.querySelector("#" + r);
+        const isCorrect = quizItem.a == optionIndex;
+        //ako (quizPredmet.a == indexOpcije)
+        if (isCorrect) {
           //change background color of li element here
+          liElement.style.backgroundColor = "green";
         }
 
-        if (radioElement.checked) {
-          // code for task 1 goes here
+        if (radioElement.checked && isCorrect) {
+          score += 1;
         }
       }
     });
+
+    document.querySelector("#score").innerText = score;
   };
+
+  // Reload the page when the reset button is clicked
+
+  document.querySelector("#btnReset").addEventListener("click", function () {
+    window.location.reload();
+  });
+
+  // Display the score
+  // Highlight the correct answers when the button is clicked
 
   // call the displayQuiz function
   displayQuiz();
+
+  // Add an Event listener for the submit button
+  document.querySelector("#btnSubmit").addEventListener("click", function () {
+    calculateScore();
+  });
 });
